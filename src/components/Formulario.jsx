@@ -28,7 +28,7 @@ const Formulario = ({ cliente, cargando }) => {
       let response;
       if (cliente.id) {
         const url = `${import.meta.env.VITE_API_URL}/${cliente.id}`;
-
+        console.log(url);
         response = await fetch(url, {
           method: "PUT",
           headers: {
@@ -39,7 +39,7 @@ const Formulario = ({ cliente, cargando }) => {
         });
       } else {
         const url = `${import.meta.env.VITE_API_URL}`;
-
+        console.log(url);
         response = await fetch(url, {
           method: "POST",
           headers: {
