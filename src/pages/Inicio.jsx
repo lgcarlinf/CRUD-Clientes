@@ -30,6 +30,8 @@ const Inicio = () => {
     }
   };
 
+  console.log(import.meta.env.VITE_API_URL);
+
   return (
     <div>
       <h1 className="font-black text-4xl text-blue-900">Clientes</h1>
