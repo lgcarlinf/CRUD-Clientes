@@ -2,5 +2,15 @@
 
 -Link:
 [CRUD-Clientes](https://controlcenterclients.netlify.app/)
+## Create
+![](src/img/add.gif)
+
+## Read
 ![](src/img/preview1.png)
-![](src/img/preview2.gif)
+
+## Update
+![](src/img/edit.gif)
+
+## Delete
+![](src/img/delete.gif)
+
