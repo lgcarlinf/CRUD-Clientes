@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import Alerta from "./Alerta";
 import Spinner from "./Spinner";
+import { db } from "../firebase/firebase";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 const Formulario = ({ cliente, cargando }) => {
   const navigate = useNavigate();
+  const { id } = cliente;
 
   const nuevoClienteSchema = Yup.object().shape({
     nombre: Yup.string()
@@ -25,32 +28,30 @@ const Formulario = ({ cliente, cargando }) => {
 
   const handleSubmit = async (values) => {
     try {
-      let response;
-      if (cliente.id) {
-        const url = `${import.meta.env.VITE_API_URL}/${cliente.id}`;
-        console.log(url);
-        response = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(values),
-        });
+      if (id) {
+        await updateClient(id, values);
       } else {
-        const url = `${import.meta.env.VITE_API_URL}`;
-        console.log(url);
-        response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(values),
-        });
+        await createClient(values);
       }
-      await response.json();
+
       navigate("/clientes");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createClient = async (values) => {
+    try {
+      const data = await addDoc(collection(db, "clientes"), values);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateClient = async (id, values) => {
+    try {
+      const clientId = doc(db, "clientes", id);
+      await updateDoc(clientId, values);
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +81,6 @@ const Formulario = ({ cliente, cargando }) => {
         validationSchema={nuevoClienteSchema}
       >
         {({ errors, touched }) => {
-          /* console.log(data); */
           return (
             <Form className="mt-10">
               <div className="mb-4">

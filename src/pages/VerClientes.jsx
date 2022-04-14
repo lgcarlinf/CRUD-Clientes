@@ -1,6 +1,17 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase.js";
+import { querystring, querystringDecode } from "@firebase/util";
+
 const VerClientes = () => {
   const [cliente, setCliente] = useState({});
   const [cargando, setCargando] = useState(false);
@@ -8,19 +19,19 @@ const VerClientes = () => {
 
   useEffect(() => {
     setCargando(!cargando);
-    const getClientforId = async () => {
-      try {
-        const url = `${import.meta.env.VITE_API_URL}/${id}`;
-        const response = await fetch(url);
-        const result = await response.json();
-        setCliente(result);
-      } catch (error) {
-        console.log(error);
-      }
-      setCargando(false);
-    };
-    getClientforId();
+
+    getClientforId(id);
   }, []);
+
+  const getClientforId = async (id) => {
+    try {
+      const clientId = await getDoc(doc(db, "clientes", id));
+      setCliente({ id: clientId.id, ...clientId.data() });
+    } catch (error) {
+      console.log(error);
+    }
+    setCargando(false);
+  };
 
   return cargando ? (
     <Spinner />

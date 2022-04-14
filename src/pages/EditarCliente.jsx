@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Formulario from "../components/Formulario";
 import { useParams } from "react-router-dom";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../firebase/firebase.js";
 
 const EditarCliente = () => {
   const [cliente, setCliente] = useState({});
@@ -9,19 +11,18 @@ const EditarCliente = () => {
 
   useEffect(() => {
     setCargando(!cargando);
-    const getClientforId = async () => {
-      try {
-        const url = `${import.meta.env.VITE_API_URL}/${id}`;
-        const response = await fetch(url);
-        const result = await response.json();
-        setCliente(result);
-      } catch (error) {
-        console.log(error);
-      }
-      setCargando(false);
-    };
-    getClientforId();
+    getClientforId(id);
   }, []);
+
+  const getClientforId = async (id) => {
+    try {
+      const clientId = await getDoc(doc(db, "clientes", id));
+      setCliente({ id: clientId.id, ...clientId.data() });
+    } catch (error) {
+      console.log(error);
+    }
+    setCargando(false);
+  };
 
   return (
     <div>
