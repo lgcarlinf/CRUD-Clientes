@@ -1,16 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Spinner from "../components/Spinner";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase.js";
-import { querystring, querystringDecode } from "@firebase/util";
 
 const VerClientes = () => {
   const [cliente, setCliente] = useState({});
